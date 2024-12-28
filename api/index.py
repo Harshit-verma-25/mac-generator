@@ -36,7 +36,7 @@
 from flask import Flask, request, jsonify, render_template
 import re
 
-app = Flask(__name__, template_folder="../templates")  # Adjust template folder path for Vercel
+app = Flask(__name__, template_folder="../templates")
 
 def increment_mac(mac, count=7):
     mac_int = int(mac.replace(":", ""), 16)
@@ -51,19 +51,18 @@ def increment_mac(mac, count=7):
 def index():
     return render_template('index.html')
 
-@app.route('/generate', methods=['POST'])
+@app.route('/api/generate', methods=['POST']) 
 def generate():
     data = request.json
     mac = data.get('mac', '').replace('-', ':').replace('.', ':').upper()
-    
+
     if len(mac) == 12:
         mac = ':'.join(mac[i:i+2] for i in range(0, 12, 2))
-    
+
     if re.match("[0-9A-F]{2}([:])[0-9A-F]{2}(\\1[0-9A-F]{2}){4}$", mac):
         generated_macs = increment_mac(mac)
-        return jsonify({ 'macs': generated_macs })
+        return jsonify({'macs': generated_macs}) 
     else:
-        return jsonify({ 'error': 'Invalid MAC address format.' }), 400
+        return jsonify({'error': 'Invalid MAC address format.'}), 400 
 
-# Vercel expects 'app' as the module name
 app = app
