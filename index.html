@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAC Address Generator</title>
+    <style>
+      /* General Body Styles */
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+
+      /* Container styles */
+      .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+      }
+
+      /* Input field styles */
+      input {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      /* Button styles */
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Output section styles */
+      .output {
+        margin-top: 20px;
+      }
+
+      /* List styles */
+      .mac-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .mac-list li {
+        margin: 5px 0;
+        font-size: 18px;
+      }
+
+      /* Responsive design */
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+
+        .container {
+          padding: 20px;
+          width: 90%; /* Adjust the container width for smaller screens */
+        }
+
+        button {
+          font-size: 14px;
+          padding: 8px 16px;
+        }
+
+        input {
+          font-size: 14px;
+          padding: 8px;
+        }
+      }
+
+      /* Larger screens */
+      @media (min-width: 1200px) {
+        .container {
+          max-width: 600px; /* Increase container size on larger screens */
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>MAC Address Generator</h1>
+      <form id="macForm">
+        <input
+          type="text"
+          id="macAddress"
+          placeholder="Enter MAC Address (00:1A:2B:3C:4D:5E)"
+          required
+        />
+        <button type="submit">Generate MACs</button>
+      </form>
+      <div class="output" id="output"></div>
+    </div>
+
+    <script>
+      document.getElementById("macForm").onsubmit = async function (e) {
+        e.preventDefault();
+        const mac = document.getElementById("macAddress").value;
+
+        const response = await fetch("/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ mac }),
+        });
+
+        const data = await response.json();
+        const output = document.getElementById("output");
+
+        if (data.error) {
+          output.innerHTML = `<p style="color: red;">${data.error}</p>`;
+        } else {
+          output.innerHTML = `<h3>Generated MAC Addresses:</h3><ul class="mac-list">${data.macs
+            .map((mac) => `<li>${mac}</li>`)
+            .join("")}</ul>`;
+        }
+      };
+    </script>
+  </body>
+</html>
