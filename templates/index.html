@@ -119,13 +119,13 @@
         <p>Made by: Harshit Verma</p>
       </footer>
     </div>
-    
+
     <script>
       document.getElementById("macForm").onsubmit = async function (e) {
         e.preventDefault();
         const mac = document.getElementById("macAddress").value;
 
-        const response = await fetch("/generate", {
+        const response = await fetch("/api/generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
