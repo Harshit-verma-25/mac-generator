@@ -61,7 +61,7 @@ def generate():
 
     if re.match("[0-9A-F]{2}([:])[0-9A-F]{2}(\\1[0-9A-F]{2}){4}$", mac):
         generated_macs = increment_mac(mac)
-        return jsonify({'macs': generated_macs}) 
+        return jsonify({'macs': [mac] + generated_macs}) 
     else:
         return jsonify({'error': 'Invalid MAC address format.'}), 400 
 
